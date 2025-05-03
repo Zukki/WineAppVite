@@ -1,6 +1,7 @@
 import './style.css'
 
 document.querySelector<HTMLDivElement>('#scorecardFormDiv')!.innerHTML = `
+<h1>v0_1b</h1>
 <form id="scorecardForm">
       <fieldset>
          <legend>Guest</legend>
@@ -143,116 +144,23 @@ document.querySelector<HTMLDivElement>('#scorecardFormDiv')!.innerHTML = `
          </p>
       </fieldset>
 
-      <button type="submit" id="formButton">Submit</button>
+      <button type="submit">Submit</button>
    </form>
-
-   <script>
-    document.getElementById("formButton").onclick = GetScorecardFormJson;
-
-    function GetScorecardFormJson() {
-         console.log("****GetScorecardFormJson********");
-
-         const formData = new FormData(this);
-         const jsonOutput = {
-            Appearence: {
-               Clarity: parseFloat(formData.get('Appearence.Clarity')),
-               Color: parseFloat(formData.get('Appearence.Color'))
-            },
-            Aroma: {
-               Aroma: parseFloat(formData.get('Aroma.Aroma'))
-            },
-            Balance: {
-               Sweetness: parseFloat(formData.get('Balance.Sweetness')),
-               Acidity: parseFloat(formData.get('Balance.Acidity')),
-               'Bitterness/Astringency': parseFloat(formData.get('Balance.Bitterness_Astringency'))
-            },
-            Body: {
-               Body: parseFloat(formData.get('Body.Body'))
-            },
-            Flavor: {
-               Flavor: parseFloat(formData.get('Flavor.Flavor'))
-            },
-            Finish: {
-               Finish: parseFloat(formData.get('Finish.Finish'))
-            },
-            'Overall Impression': {
-               'Overall Impression': parseFloat(formData.get('Overall_Impression.Overall_Impression'))
-            },
-            'Total Score': {
-               'Total Score': parseFloat(formData.get('Total_Score.Total_Score'))
-            }
-         };
-         console.log(JSON.stringify(jsonOutput, null, 2));
-         alert('hello2!');
-         return jsonOutput;
-      }
-
-      document.getElementById('scorecardForm').addEventListener('submit', async function (event) {
-         console.log("****addEventListener (async)********");
-
-         event.preventDefault();
-         const formData = new FormData(this);
-         const jsonOutput = {
-            Appearence: {
-               Clarity: parseFloat(formData.get('Appearence.Clarity')),
-               Color: parseFloat(formData.get('Appearence.Color'))
-            },
-            Aroma: {
-               Aroma: parseFloat(formData.get('Aroma.Aroma'))
-            },
-            Balance: {
-               Sweetness: parseFloat(formData.get('Balance.Sweetness')),
-               Acidity: parseFloat(formData.get('Balance.Acidity')),
-               'Bitterness/Astringency': parseFloat(formData.get('Balance.Bitterness_Astringency'))
-            },
-            Body: {
-               Body: parseFloat(formData.get('Body.Body'))
-            },
-            Flavor: {
-               Flavor: parseFloat(formData.get('Flavor.Flavor'))
-            },
-            Finish: {
-               Finish: parseFloat(formData.get('Finish.Finish'))
-            },
-            'Overall Impression': {
-               'Overall Impression': parseFloat(formData.get('Overall_Impression.Overall_Impression'))
-            },
-            'Total Score': {
-               'Total Score': parseFloat(formData.get('Total_Score.Total_Score'))
-            }
-         };
-         console.log(JSON.stringify(jsonOutput, null, 2));
-         const guestName = formData.get('Header.GuestName');
-         const wineName = formData.get('Header.WineName');
-         console.log(guestName);
-         console.log(wineName);
-
-         console.log("call await PostScorecard");
-         alert('hello!');
-         await PostScorecard(jsonOutput, guestName, wineName)
-      });
-
-      async function PostScorecard(jsonBody, guestName, wineName) {
-         console.log("****PostScorecard********");
-
-         const url = 'https://jdb8yvrpif.execute-api.us-east-1.amazonaws.com/Prod/scorecards/guest?' + new URLSearchParams({
-            idWine: wineName,
-            version: 'v0.1_webtest',
-            guest: guestName
-         })
-
-         console.log(url);
-
-         let response = await fetch(url, {
-            method: 'POST',
-            headers: {
-               'Content-Type': 'application/json;charset=utf-8'
-            },
-            body: jsonBody
-         });
-
-         let result = await response.json();
-         alert(result.message);
-      }
-   </script>
 `
+
+document.addEventListener('scorecardForm', () => {
+    const form = document.getElementById('scorecardForm') as HTMLFormElement;
+  
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+  
+      const formData = new FormData(form);
+      const data: { [key: string]: string } = {};
+  
+      formData.forEach((value, key) => {
+        data[key] = value.toString();
+      });
+  
+      console.log('Form Data:', data);
+    });
+  });
